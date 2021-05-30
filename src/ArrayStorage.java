@@ -6,6 +6,7 @@ import java.util.Arrays;
 public class ArrayStorage {
     private Resume[] storage = new Resume[10000];
     private int size = 0;
+    private static final String RESUME_NOT_FOUND = "Resume with uuid=%s was not found";
 
     void clear() {
         Arrays.fill(storage, 0, size, null);
@@ -13,16 +14,33 @@ public class ArrayStorage {
     }
 
     void save(Resume r) {
-        if (r != null && get(r.uuid) == null) {
-            storage[size++] = r;
+        if (r != null) {
+            if (getFromStorage(r.uuid) != null) {
+                System.out.println("Resume already exists");
+            } else if (size == storage.length) {
+                System.out.println("Storage is full");
+            } else {
+                storage[size++] = r;
+            }
         }
     }
 
+    void update(Resume r) {
+        for (int i = 0; i < size; i++) {
+            if (storage[i].uuid.equals(r.uuid)) {
+                storage[i] = r;
+                return;
+            }
+        }
+        System.out.println(String.format(RESUME_NOT_FOUND, r.uuid));
+    }
+
     Resume get(String uuid) {
-        return Arrays.stream(storage)
-                .limit(size)
-                .filter(resume -> resume.uuid.equals(uuid))
-                .findFirst().orElse(null);
+        Resume resume = getFromStorage(uuid);
+        if (resume == null) {
+            System.out.println(String.format(RESUME_NOT_FOUND, uuid));
+        }
+        return resume;
     }
 
     void delete(String uuid) {
@@ -34,6 +52,7 @@ public class ArrayStorage {
                 return;
             }
         }
+        System.out.println(String.format(RESUME_NOT_FOUND, uuid));
     }
 
     /**
@@ -45,5 +64,14 @@ public class ArrayStorage {
 
     int size() {
         return size;
+    }
+
+    private Resume getFromStorage(String uuid) {
+        for (int i = 0; i < size; i++) {
+            if (storage[i].uuid.equals(uuid)) {
+                return storage[i];
+            }
+        }
+        return null;
     }
 }
