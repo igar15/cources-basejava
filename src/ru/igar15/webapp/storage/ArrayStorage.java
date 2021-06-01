@@ -1,3 +1,7 @@
+package ru.igar15.webapp.storage;
+
+import ru.igar15.webapp.model.Resume;
+
 import java.util.Arrays;
 
 /**
@@ -6,17 +10,17 @@ import java.util.Arrays;
 public class ArrayStorage {
     private Resume[] storage = new Resume[10000];
     private int size = 0;
-    private static final String RESUME_NOT_FOUND = "Resume with uuid=%s was not found";
+    private static final String RESUME_NOT_FOUND = "ru.igar15.webapp.model.Resume with uuid=%s was not found";
 
-    void clear() {
+    public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
-    void save(Resume r) {
+    public void save(Resume r) {
         if (r != null) {
-            if (getFromStorage(r.uuid) != null) {
-                System.out.println("Resume already exists");
+            if (getFromStorage(r.getUuid()) != null) {
+                System.out.println("ru.igar15.webapp.model.Resume already exists");
             } else if (size == storage.length) {
                 System.out.println("Storage is full");
             } else {
@@ -25,17 +29,17 @@ public class ArrayStorage {
         }
     }
 
-    void update(Resume r) {
+    public void update(Resume r) {
         for (int i = 0; i < size; i++) {
-            if (storage[i].uuid.equals(r.uuid)) {
+            if (storage[i].getUuid().equals(r.getUuid())) {
                 storage[i] = r;
                 return;
             }
         }
-        System.out.println(String.format(RESUME_NOT_FOUND, r.uuid));
+        System.out.println(String.format(RESUME_NOT_FOUND, r.getUuid()));
     }
 
-    Resume get(String uuid) {
+    public Resume get(String uuid) {
         Resume resume = getFromStorage(uuid);
         if (resume == null) {
             System.out.println(String.format(RESUME_NOT_FOUND, uuid));
@@ -43,9 +47,9 @@ public class ArrayStorage {
         return resume;
     }
 
-    void delete(String uuid) {
+    public void delete(String uuid) {
         for (int i = 0; i < size; i++) {
-            if (storage[i].uuid.equals(uuid)) {
+            if (storage[i].getUuid().equals(uuid)) {
                 if (size - 1 - i >= 0) System.arraycopy(storage, i + 1, storage, i, size - 1 - i);
                 storage[size - 1] = null;
                 size--;
@@ -58,17 +62,17 @@ public class ArrayStorage {
     /**
      * @return array, contains only Resumes in storage (without null)
      */
-    Resume[] getAll() {
+    public Resume[] getAll() {
         return Arrays.copyOf(storage, size);
     }
 
-    int size() {
+    public int size() {
         return size;
     }
 
     private Resume getFromStorage(String uuid) {
         for (int i = 0; i < size; i++) {
-            if (storage[i].uuid.equals(uuid)) {
+            if (storage[i].getUuid().equals(uuid)) {
                 return storage[i];
             }
         }
