@@ -2,13 +2,14 @@ package ru.igar15.webapp;
 
 import ru.igar15.webapp.model.Resume;
 import ru.igar15.webapp.storage.ArrayStorage;
+import ru.igar15.webapp.storage.SortedArrayStorage;
 import ru.igar15.webapp.storage.Storage;
 
 /**
  * Test for your ru.igar15.webapp.storage.ArrayStorage implementation
  */
 public class MainTestArrayStorage {
-    private static final Storage ARRAY_STORAGE = new ArrayStorage();
+    private static final Storage ARRAY_STORAGE = new SortedArrayStorage();
 
     public static void main(String[] args) {
         Resume r1 = new Resume();
