@@ -44,6 +44,7 @@ abstract class AbstractArrayStorageTest {
     void save() {
         Resume resume = new Resume(NEW_UUID);
         storage.save(resume);
+        assertEquals(4, storage.size());
         assertEquals(resume, storage.get(NEW_UUID));
     }
 
@@ -55,7 +56,7 @@ abstract class AbstractArrayStorageTest {
     @Test
     void saveFull() throws NoSuchFieldException, IllegalAccessException {
         assertThrows(StorageException.class, () -> {
-            for (int i = 0; i < 10001; i++) {
+            for (int i = 0; i <= AbstractArrayStorage.CAPACITY; i++) {
                 storage.save(new Resume());
             }
         });
