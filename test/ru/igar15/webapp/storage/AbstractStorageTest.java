@@ -1,5 +1,6 @@
 package ru.igar15.webapp.storage;
 
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.igar15.webapp.exception.ExistInStorageException;
@@ -9,24 +10,30 @@ import ru.igar15.webapp.model.Resume;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-abstract class AbstractArrayStorageTest {
-    private final Storage storage;
+abstract class AbstractStorageTest {
+    protected final Storage storage;
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
-    private static final String NEW_UUID = "new_uuid";
-    private static final String NOT_EXISTED = "xxxx";
+    private static final String NEW_UUID = "uuid_new";
+    private static final String NOT_EXISTED_UUID = "uuid_not_existed";
 
-    public AbstractArrayStorageTest(Storage storage) {
+    protected static final Resume RESUME_1 = new Resume(UUID_1);
+    protected static final Resume RESUME_2 = new Resume(UUID_2);
+    protected static final Resume RESUME_3 = new Resume(UUID_3);
+    private static final Resume RESUME_NEW = new Resume(NEW_UUID);
+    private static final Resume RESUME_NOT_EXISTED = new Resume(NOT_EXISTED_UUID);
+
+    public AbstractStorageTest(Storage storage) {
         this.storage = storage;
     }
 
     @BeforeEach
     void storageSetup() {
         storage.clear();
-        storage.save(new Resume(UUID_1));
-        storage.save(new Resume(UUID_2));
-        storage.save(new Resume(UUID_3));
+        storage.save(RESUME_1);
+        storage.save(RESUME_2);
+        storage.save(RESUME_3);
     }
 
     @Test
@@ -42,19 +49,19 @@ abstract class AbstractArrayStorageTest {
 
     @Test
     void save() {
-        Resume resume = new Resume(NEW_UUID);
-        storage.save(resume);
+        storage.save(RESUME_NEW);
         assertEquals(4, storage.size());
-        assertEquals(resume, storage.get(NEW_UUID));
+        assertEquals(RESUME_NEW, storage.get(NEW_UUID));
     }
 
     @Test
     void duplicateSave() {
-        assertThrows(ExistInStorageException.class, () -> storage.save(new Resume(UUID_1)));
+        assertThrows(ExistInStorageException.class, () -> storage.save(RESUME_1));
     }
 
     @Test
-    void saveFull() throws NoSuchFieldException, IllegalAccessException {
+    void saveFull() {
+        Assumptions.assumeTrue(storage instanceof AbstractArrayStorage);
         assertThrows(StorageException.class, () -> {
             for (int i = 0; i <= AbstractArrayStorage.CAPACITY; i++) {
                 storage.save(new Resume());
@@ -64,14 +71,13 @@ abstract class AbstractArrayStorageTest {
 
     @Test
     void update() {
-        Resume updated = new Resume(UUID_1);
-        storage.update(updated);
-        assertEquals(updated, storage.get(UUID_1));
+        storage.update(RESUME_1);
+        assertEquals(RESUME_1, storage.get(UUID_1));
     }
 
     @Test
     void updateNotFound() {
-        assertThrows(NotExistInStorageException.class, () -> storage.update( new Resume(NOT_EXISTED)));
+        assertThrows(NotExistInStorageException.class, () -> storage.update(RESUME_NOT_EXISTED));
     }
 
 
@@ -84,23 +90,23 @@ abstract class AbstractArrayStorageTest {
 
     @Test
     void deleteNotFound() {
-        assertThrows(NotExistInStorageException.class, () -> storage.delete(NOT_EXISTED));
+        assertThrows(NotExistInStorageException.class, () -> storage.delete(NOT_EXISTED_UUID));
     }
 
     @Test
     void get() {
         Resume resume = storage.get(UUID_1);
-        assertEquals(UUID_1, resume.getUuid());
+        assertEquals(RESUME_1, resume);
     }
 
     @Test
     void getNotFound() {
-        assertThrows(NotExistInStorageException.class, () -> storage.get(NOT_EXISTED));
+        assertThrows(NotExistInStorageException.class, () -> storage.get(NOT_EXISTED_UUID));
     }
 
     @Test
     void getAll() {
-        Resume[] expected = {new Resume(UUID_1), new Resume(UUID_2), new Resume(UUID_3)};
+        Resume[] expected = {RESUME_1, RESUME_2, RESUME_3};
         assertArrayEquals(expected, storage.getAll());
     }
 }
