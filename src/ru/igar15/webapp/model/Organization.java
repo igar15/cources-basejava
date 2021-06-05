@@ -1,15 +1,16 @@
 package ru.igar15.webapp.model;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class Organization {
     private final Link homePage;
-    private final List<Position> positions = new ArrayList<>();
+    private final List<Position> positions;
 
-    public Organization(String name, String url) {
+    public Organization(String name, String url, List<Position> positions) {
+        Objects.requireNonNull(positions, "positions must not be null");
         this.homePage = new Link(name, url);
+        this.positions = positions;
     }
 
     public List<Position> getPositions() {

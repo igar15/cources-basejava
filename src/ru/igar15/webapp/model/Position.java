@@ -9,6 +9,10 @@ public class Position {
     private final String title;
     private final String description;
 
+    public Position(LocalDate startDate, LocalDate endDate, String title) {
+        this(startDate, endDate, title, null);
+    }
+
     public Position(LocalDate startDate, LocalDate endDate, String title, String description) {
         Objects.requireNonNull(title, "title must not be null");
         Objects.requireNonNull(startDate, "startDate must not be null");

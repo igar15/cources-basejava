@@ -9,20 +9,10 @@ import ru.igar15.webapp.exception.StorageException;
 import ru.igar15.webapp.model.Resume;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static ru.igar15.webapp.storage.ResumeTestData.*;
 
 abstract class AbstractStorageTest {
     protected final Storage storage;
-    private static final String UUID_1 = "uuid1";
-    private static final String UUID_2 = "uuid2";
-    private static final String UUID_3 = "uuid3";
-    private static final String NEW_UUID = "uuid_new";
-    private static final String NOT_EXISTED_UUID = "uuid_not_existed";
-
-    protected static final Resume RESUME_1 = new Resume(UUID_1, "vasya");
-    protected static final Resume RESUME_2 = new Resume(UUID_2, "petya");
-    protected static final Resume RESUME_3 = new Resume(UUID_3, "kolya");
-    private static final Resume RESUME_NEW = new Resume(NEW_UUID, "fedya");
-    private static final Resume RESUME_NOT_EXISTED = new Resume(NOT_EXISTED_UUID, "kostya");
 
     public AbstractStorageTest(Storage storage) {
         this.storage = storage;

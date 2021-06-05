@@ -7,6 +7,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static ru.igar15.webapp.storage.ResumeTestData.*;
 
 class MapStorageTest extends AbstractStorageTest {
 
