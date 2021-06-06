@@ -9,7 +9,7 @@ public class MainFileDirectoryWalker {
         File[] files = directory.listFiles();
         if (files != null) {
             for (File temp : files) {
-                System.out.println(temp.getName());
+                printWithTabulation(temp, new StringBuilder(temp.getName()).reverse());
                 if (temp.isDirectory()) {
                     printFileNames(temp);
                 }
@@ -17,8 +17,18 @@ public class MainFileDirectoryWalker {
         }
     }
 
+    private static void printWithTabulation(File file, StringBuilder stringBuilder) {
+        File parentFile = file.getParentFile();
+        if (parentFile == null) {
+            System.out.println(stringBuilder.reverse().toString());
+        } else {
+            stringBuilder.append("\t");
+            printWithTabulation(parentFile, stringBuilder);
+        }
+    }
+
     public static void main(String[] args) throws IOException {
-        File projectDirectory = new File("./storage");
+        File projectDirectory = new File("./");
         printFileNames(projectDirectory);
     }
 }
