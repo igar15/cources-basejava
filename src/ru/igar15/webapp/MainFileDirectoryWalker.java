@@ -5,19 +5,20 @@ import java.io.IOException;
 
 public class MainFileDirectoryWalker {
 
-    public static void printFileNames(File file) {
-        if (file.isFile()) {
-            System.out.println(file.getName());
-        } else {
-            File[] files = file.listFiles();
+    public static void printFileNames(File directory) {
+        File[] files = directory.listFiles();
+        if (files != null) {
             for (File temp : files) {
-                printFileNames(temp);
+                System.out.println(temp.getName());
+                if (temp.isDirectory()) {
+                    printFileNames(temp);
+                }
             }
         }
     }
 
     public static void main(String[] args) throws IOException {
-        File projectDirectory = new File("./");
+        File projectDirectory = new File("./storage");
         printFileNames(projectDirectory);
     }
 }

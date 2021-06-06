@@ -3,6 +3,7 @@ package ru.igar15.webapp.model;
 import java.util.Objects;
 
 public class TextSection extends Section {
+    private static final long serialVersionUID = 42L;
     private final String content;
 
     public TextSection(String content) {
