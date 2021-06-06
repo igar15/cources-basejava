@@ -2,6 +2,8 @@ package ru.igar15.webapp;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class MainFileDirectoryWalker {
 
@@ -28,7 +30,10 @@ public class MainFileDirectoryWalker {
     }
 
     public static void main(String[] args) throws IOException {
-        File projectDirectory = new File("./");
-        printFileNames(projectDirectory);
+//        File projectDirectory = new File("./");
+//        printFileNames(projectDirectory);
+        Path path = Path.of("C:/projects/basejava/storage");
+        Path uuid1 = path.resolve("uuid1");
+        System.out.println(Files.exists(uuid1));
     }
 }

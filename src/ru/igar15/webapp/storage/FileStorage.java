@@ -8,11 +8,13 @@ import ru.igar15.webapp.model.Resume;
 import java.io.*;
 import java.util.Objects;
 
-public abstract class AbstractFileStorage extends AbstractStorage {
-    private File directory;
+public class FileStorage extends AbstractStorage {
+    private final File directory;
+    private final ResumeToFileExecutor resumeToFileExecutor;
 
-    protected AbstractFileStorage(File directory) {
+    public FileStorage(File directory, ResumeToFileExecutor resumeToFileExecutor) {
         Objects.requireNonNull(directory, "directory must not be null");
+        Objects.requireNonNull(resumeToFileExecutor, "resumeToFileExecutor must not be null");
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
         }
@@ -20,11 +22,8 @@ public abstract class AbstractFileStorage extends AbstractStorage {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not readable/writable");
         }
         this.directory = directory;
+        this.resumeToFileExecutor = resumeToFileExecutor;
     }
-
-    protected abstract void doSave(Resume resume, FileOutputStream fileOutputStream) throws IOException;
-
-    protected abstract Resume doRead(String uuid, FileInputStream fileInputStream) throws IOException;
 
     @Override
     public void save(Resume resume) {
@@ -33,7 +32,7 @@ public abstract class AbstractFileStorage extends AbstractStorage {
             if (!resumeFile.createNewFile()) {
                 throw new ExistInStorageException(resume.getUuid());
             }
-            doSave(resume, new FileOutputStream(resumeFile));
+            resumeToFileExecutor.doSave(resume, new FileOutputStream(resumeFile));
         } catch (IOException e) {
             throw new StorageException("Fail to save in storage", resume.getUuid());
         }
@@ -43,9 +42,9 @@ public abstract class AbstractFileStorage extends AbstractStorage {
     public void update(Resume resume) {
         File resumeFile = checkFileExist(resume.getUuid());
         try {
-            doSave(resume, new FileOutputStream(resumeFile));
+            resumeToFileExecutor.doSave(resume, new FileOutputStream(resumeFile));
         } catch (IOException e) {
-            throw new StorageException("Fail to save in storage", resume.getUuid());
+            throw new StorageException("Fail to update in storage", resume.getUuid());
         }
     }
 
@@ -53,9 +52,9 @@ public abstract class AbstractFileStorage extends AbstractStorage {
     public Resume get(String uuid) {
         File resumeFile = checkFileExist(uuid);
         try {
-            return doRead(uuid, new FileInputStream(resumeFile));
+            return resumeToFileExecutor.doRead(uuid, new FileInputStream(resumeFile));
         } catch (IOException e) {
-            throw new StorageException("Fail to save in storage", uuid);
+            throw new StorageException("Fail to read from storage", uuid);
         }
     }
 

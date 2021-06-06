@@ -18,6 +18,8 @@ public class ResumeTestData {
     public static final Resume RESUME_NEW = new Resume(NEW_UUID, "fedya");
     public static final Resume RESUME_NOT_EXISTED = new Resume(NOT_EXISTED_UUID, "kostya");
 
+    public static final String RESUME_FILE_STORAGE = "C:/projects/basejava/storage";
+
     static {
         RESUME_1.addContact(ContactType.EMAIL, "vasya@yandex.ru");
         RESUME_1.addContact(ContactType.PHONE, "12345");

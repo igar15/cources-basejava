@@ -5,20 +5,17 @@ import ru.igar15.webapp.model.Resume;
 
 import java.io.*;
 
-public class ObjectOutputFileStorage extends AbstractFileStorage {
-    protected ObjectOutputFileStorage(File directory) {
-        super(directory);
-    }
+public class ObjectStreamFileStorage implements ResumeToFileExecutor {
 
     @Override
-    protected void doSave(Resume resume, FileOutputStream fileOutputStream) throws IOException {
+    public void doSave(Resume resume, FileOutputStream fileOutputStream) throws IOException {
         try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
             objectOutputStream.writeObject(resume);
         }
     }
 
     @Override
-    protected Resume doRead(String uuid, FileInputStream fileInputStream) throws IOException {
+    public Resume doRead(String uuid, FileInputStream fileInputStream) throws IOException {
         try (ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
             Resume resume = null;
             try {
