@@ -8,15 +8,15 @@ import java.io.*;
 public class ObjectStreamFileStorage implements ResumeToFileExecutor {
 
     @Override
-    public void doSave(Resume resume, FileOutputStream fileOutputStream) throws IOException {
-        try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
+    public void doSave(Resume resume, OutputStream outputStream) throws IOException {
+        try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream)) {
             objectOutputStream.writeObject(resume);
         }
     }
 
     @Override
-    public Resume doRead(String uuid, FileInputStream fileInputStream) throws IOException {
-        try (ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
+    public Resume doRead(String uuid, InputStream inputStream) throws IOException {
+        try (ObjectInputStream objectInputStream = new ObjectInputStream(inputStream)) {
             Resume resume = null;
             try {
                 resume = (Resume) objectInputStream.readObject();
