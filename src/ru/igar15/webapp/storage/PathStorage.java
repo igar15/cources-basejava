@@ -4,6 +4,7 @@ import ru.igar15.webapp.exception.ExistInStorageException;
 import ru.igar15.webapp.exception.NotExistInStorageException;
 import ru.igar15.webapp.exception.StorageException;
 import ru.igar15.webapp.model.Resume;
+import ru.igar15.webapp.storage.serializer.StreamSerializer;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -14,11 +15,11 @@ import java.util.Objects;
 
 public class PathStorage extends AbstractStorage {
     private final Path directory;
-    private final ResumeToFileExecutor resumeToFileExecutor;
+    private final StreamSerializer streamSerializer;
 
-    public PathStorage(Path directory, ResumeToFileExecutor resumeToFileExecutor) {
+    public PathStorage(Path directory, StreamSerializer streamSerializer) {
         Objects.requireNonNull(directory, "directory must not be null");
-        Objects.requireNonNull(resumeToFileExecutor, "resumeToFileExecutor must not be null");
+        Objects.requireNonNull(streamSerializer, "resumeToFileExecutor must not be null");
         if (!Files.isDirectory(directory)) {
             throw new IllegalArgumentException(directory.toAbsolutePath() + " is not directory");
         }
@@ -26,7 +27,7 @@ public class PathStorage extends AbstractStorage {
             throw new IllegalArgumentException(directory.toAbsolutePath() + " is not readable/writable");
         }
         this.directory = directory;
-        this.resumeToFileExecutor = resumeToFileExecutor;
+        this.streamSerializer = streamSerializer;
     }
 
     @Override
@@ -36,7 +37,7 @@ public class PathStorage extends AbstractStorage {
             throw new ExistInStorageException(resume.getUuid());
         }
         try {
-            resumeToFileExecutor.doSave(resume, new FileOutputStream(resumeFile.toFile()));
+            streamSerializer.doSave(resume, new FileOutputStream(resumeFile.toFile()));
         } catch (IOException e) {
             throw new StorageException("Fail to save in storage", resume.getUuid());
         }
@@ -46,7 +47,7 @@ public class PathStorage extends AbstractStorage {
     public void update(Resume resume) {
         Path resumeFile = checkFileExist(resume.getUuid());
         try {
-            resumeToFileExecutor.doSave(resume, new FileOutputStream(resumeFile.toFile()));
+            streamSerializer.doSave(resume, new FileOutputStream(resumeFile.toFile()));
         } catch (IOException e) {
             throw new StorageException("Fail to update in storage", resume.getUuid());
         }
@@ -56,7 +57,7 @@ public class PathStorage extends AbstractStorage {
     public Resume get(String uuid) {
         Path resumeFile = checkFileExist(uuid);
         try {
-            return resumeToFileExecutor.doRead(uuid, new FileInputStream(resumeFile.toFile()));
+            return streamSerializer.doRead(uuid, new FileInputStream(resumeFile.toFile()));
         } catch (IOException e) {
             throw new StorageException("Fail to read from storage", uuid);
         }

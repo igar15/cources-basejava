@@ -1,18 +1,24 @@
 package ru.igar15.webapp.model;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlRootElement;
+
 import java.io.Serializable;
 import java.util.*;
 
 /**
  * Initial resume class
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Resume implements Comparable<Resume>, Serializable {
     private static final long serialVersionUID = 42L;
 
     // Unique identifier
-    private final String uuid;
+    private String uuid;
 
-    private final String fullName;
+    private String fullName;
 
     private Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
 
@@ -20,6 +26,9 @@ public class Resume implements Comparable<Resume>, Serializable {
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
+    }
+
+    public Resume() {
     }
 
     public Resume(String uuid, String fullName) {
@@ -58,12 +67,14 @@ public class Resume implements Comparable<Resume>, Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         Resume resume = (Resume) o;
         return Objects.equals(uuid, resume.uuid) &&
-                Objects.equals(fullName, resume.fullName);
+                Objects.equals(fullName, resume.fullName) &&
+                Objects.equals(contacts, resume.contacts) &&
+                Objects.equals(sections, resume.sections);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, fullName);
+        return Objects.hash(uuid, fullName, contacts, sections);
     }
 
     @Override

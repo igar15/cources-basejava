@@ -1,11 +1,11 @@
-package ru.igar15.webapp.storage;
+package ru.igar15.webapp.storage.serializer;
 
 import ru.igar15.webapp.exception.StorageException;
 import ru.igar15.webapp.model.Resume;
 
 import java.io.*;
 
-public class ObjectStreamFileStorage implements ResumeToFileExecutor {
+public class ObjectStreamSerializer implements StreamSerializer {
 
     @Override
     public void doSave(Resume resume, OutputStream outputStream) throws IOException {

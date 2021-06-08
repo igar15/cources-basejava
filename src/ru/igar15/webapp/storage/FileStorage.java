@@ -4,17 +4,18 @@ import ru.igar15.webapp.exception.ExistInStorageException;
 import ru.igar15.webapp.exception.NotExistInStorageException;
 import ru.igar15.webapp.exception.StorageException;
 import ru.igar15.webapp.model.Resume;
+import ru.igar15.webapp.storage.serializer.StreamSerializer;
 
 import java.io.*;
 import java.util.Objects;
 
 public class FileStorage extends AbstractStorage {
     private final File directory;
-    private final ResumeToFileExecutor resumeToFileExecutor;
+    private final StreamSerializer streamSerializer;
 
-    public FileStorage(File directory, ResumeToFileExecutor resumeToFileExecutor) {
+    public FileStorage(File directory, StreamSerializer streamSerializer) {
         Objects.requireNonNull(directory, "directory must not be null");
-        Objects.requireNonNull(resumeToFileExecutor, "resumeToFileExecutor must not be null");
+        Objects.requireNonNull(streamSerializer, "resumeToFileExecutor must not be null");
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
         }
@@ -22,7 +23,7 @@ public class FileStorage extends AbstractStorage {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not readable/writable");
         }
         this.directory = directory;
-        this.resumeToFileExecutor = resumeToFileExecutor;
+        this.streamSerializer = streamSerializer;
     }
 
     @Override
@@ -32,7 +33,7 @@ public class FileStorage extends AbstractStorage {
             if (!resumeFile.createNewFile()) {
                 throw new ExistInStorageException(resume.getUuid());
             }
-            resumeToFileExecutor.doSave(resume, new FileOutputStream(resumeFile));
+            streamSerializer.doSave(resume, new FileOutputStream(resumeFile));
         } catch (IOException e) {
             throw new StorageException("Fail to save in storage", resume.getUuid());
         }
@@ -42,7 +43,7 @@ public class FileStorage extends AbstractStorage {
     public void update(Resume resume) {
         File resumeFile = checkFileExist(resume.getUuid());
         try {
-            resumeToFileExecutor.doSave(resume, new FileOutputStream(resumeFile));
+            streamSerializer.doSave(resume, new FileOutputStream(resumeFile));
         } catch (IOException e) {
             throw new StorageException("Fail to update in storage", resume.getUuid());
         }
@@ -52,7 +53,7 @@ public class FileStorage extends AbstractStorage {
     public Resume get(String uuid) {
         File resumeFile = checkFileExist(uuid);
         try {
-            return resumeToFileExecutor.doRead(uuid, new FileInputStream(resumeFile));
+            return streamSerializer.doRead(uuid, new FileInputStream(resumeFile));
         } catch (IOException e) {
             throw new StorageException("Fail to read from storage", uuid);
         }

@@ -1,11 +1,18 @@
 package ru.igar15.webapp.model;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+
 import java.util.List;
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class ListSection extends Section {
     private static final long serialVersionUID = 42L;
-    private final List<String> items;
+    private List<String> items;
+
+    public ListSection() {
+    }
 
     public ListSection(List<String> items) {
         Objects.requireNonNull(items, "items must not be null");
