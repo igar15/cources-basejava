@@ -7,6 +7,7 @@ import ru.igar15.webapp.util.LocalDateAdapter;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,7 +15,7 @@ import java.util.Objects;
 public class Organization implements Serializable {
     private static final long serialVersionUID = 42L;
     private Link homePage;
-    private List<Position> positions;
+    private List<Position> positions = new ArrayList<>();
 
     public Organization() {
     }
@@ -23,6 +24,10 @@ public class Organization implements Serializable {
         Objects.requireNonNull(positions, "positions must not be null");
         this.homePage = new Link(name, url);
         this.positions = positions;
+    }
+
+    public Link getHomePage() {
+        return homePage;
     }
 
     public List<Position> getPositions() {
@@ -63,13 +68,13 @@ public class Organization implements Serializable {
         @XmlJavaTypeAdapter(LocalDateAdapter.class)
         private LocalDate endDate;
         private String title;
-        private String description;
+        private String description = "";
 
         public Position() {
         }
 
         public Position(LocalDate startDate, LocalDate endDate, String title) {
-            this(startDate, endDate, title, null);
+            this(startDate, endDate, title, "");
         }
 
         public Position(LocalDate startDate, LocalDate endDate, String title, String description) {
@@ -80,6 +85,22 @@ public class Organization implements Serializable {
             this.endDate = endDate;
             this.title = title;
             this.description = description;
+        }
+
+        public LocalDate getStartDate() {
+            return startDate;
+        }
+
+        public LocalDate getEndDate() {
+            return endDate;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public String getDescription() {
+            return description;
         }
 
         @Override

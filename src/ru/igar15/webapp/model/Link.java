@@ -10,7 +10,7 @@ import java.util.Objects;
 public class Link implements Serializable {
     private static final long serialVersionUID = 42L;
     private String name;
-    private String url;
+    private String url = "";
 
     public Link() {
     }
