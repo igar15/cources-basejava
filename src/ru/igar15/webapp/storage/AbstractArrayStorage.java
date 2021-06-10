@@ -7,7 +7,7 @@ import ru.igar15.webapp.model.Resume;
 
 import java.util.Arrays;
 
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage implements Storage {
     protected static final int CAPACITY = 10000;
     protected Resume[] storage = new Resume[CAPACITY];
     protected int size = 0;

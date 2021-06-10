@@ -7,7 +7,7 @@ import ru.igar15.webapp.model.Resume;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MapStorage extends AbstractStorage {
+public class MapStorage implements Storage {
     private final Map<String, Resume> map = new HashMap<>();
 
     @Override

@@ -7,7 +7,7 @@ import ru.igar15.webapp.model.Resume;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListStorage extends AbstractStorage {
+public class ListStorage implements Storage {
     private final List<Resume> list = new ArrayList<>();
 
     @Override

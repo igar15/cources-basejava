@@ -9,7 +9,7 @@ import ru.igar15.webapp.storage.serializer.StreamSerializer;
 import java.io.*;
 import java.util.Objects;
 
-public class FileStorage extends AbstractStorage {
+public class FileStorage implements Storage {
     private final File directory;
     private final StreamSerializer streamSerializer;
 

@@ -13,7 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
-public class PathStorage extends AbstractStorage {
+public class PathStorage implements Storage {
     private final Path directory;
     private final StreamSerializer streamSerializer;
 
