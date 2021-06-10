@@ -2,12 +2,17 @@ package ru.igar15.webapp;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class MainConcurrency {
-    private static final Object LOCK = new Object();
+    //    private static final Object LOCK = new Object();
+    private static final Lock lock = new ReentrantLock();
+    private static final int THREADS_NUMBER = 10000;
     private static int counter;
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, ExecutionException {
         System.out.println(Thread.currentThread().getName());
         new Thread() {
             @Override
@@ -23,22 +28,33 @@ public class MainConcurrency {
         daemon.setDaemon(true);
         daemon.start();
 
-        List<Thread> threads = new ArrayList<>(10000);
-        for (int i = 0; i < 10000; i++) {
-            Thread incThread = new Thread(() -> {
+        CountDownLatch countDownLatch = new CountDownLatch(THREADS_NUMBER);
+        ExecutorService executorService = Executors.newCachedThreadPool();
+//        List<Thread> threads = new ArrayList<>(THREADS_NUMBER);
+        for (int i = 0; i < THREADS_NUMBER; i++) {
+            Future<Integer> counterFuture = executorService.submit(() -> {
                 for (int j = 0; j < 100; j++) {
                     inc2();
                 }
+                countDownLatch.countDown();
+                return counter;
             });
-            incThread.start();
-            threads.add(incThread);
+//            Thread incThread = new Thread(() -> {
+//                for (int j = 0; j < 100; j++) {
+//                    inc2();
+//                }
+//                countDownLatch.countDown();
+//            });
+//            incThread.start();
+//            threads.add(incThread);
         }
 
-        for (Thread temp : threads) {
-            temp.join();
-        }
-
-//        Thread.sleep(8000);
+//        for (Thread temp : threads) {
+//            temp.join();
+//        }
+//        countDownLatch.await();
+        executorService.shutdown();
+        executorService.awaitTermination(1, TimeUnit.MINUTES);
         System.out.println(counter);
     }
 
@@ -47,8 +63,13 @@ public class MainConcurrency {
     }
 
     private static void inc2() {
-        synchronized (LOCK) {
+//        synchronized (LOCK) {
+        lock.lock();
+        try {
             counter++;
+        } finally {
+            lock.unlock();
         }
+//        }
     }
 }
