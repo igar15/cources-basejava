@@ -1,7 +1,9 @@
 package ru.igar15.webapp.storage;
 
+import ru.igar15.webapp.Config;
 import ru.igar15.webapp.model.*;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -18,7 +20,7 @@ public class ResumeTestData {
     public static final Resume RESUME_NEW = new Resume(NEW_UUID, "fedya");
     public static final Resume RESUME_NOT_EXISTED = new Resume(NOT_EXISTED_UUID, "kostya");
 
-    public static final String RESUME_FILE_STORAGE = "C:/projects/basejava/storage";
+    public static final File RESUME_FILE_STORAGE_DIR = Config.get().getStorageDir();
 
     static {
         RESUME_1.addContact(ContactType.EMAIL, "vasya@yandex.ru");
